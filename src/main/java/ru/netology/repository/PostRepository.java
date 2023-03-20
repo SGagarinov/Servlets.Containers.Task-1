@@ -2,10 +2,11 @@ package ru.netology.repository;
 
 import ru.netology.model.Post;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class PostRepository {
   private ConcurrentHashMap<Long, Post> list = new ConcurrentHashMap<>();
-  private static long COUNT = 0;
+  private static AtomicLong COUNT = new AtomicLong();
 
   public ConcurrentHashMap<Long, Post> all() {
     return list;
@@ -17,9 +18,9 @@ public class PostRepository {
 
   public Post save(Post post) {
     if (post.getId() == 0) {
-      COUNT++;
-      post.setId(COUNT);
-      list.put(COUNT, post);
+      COUNT.getAndIncrement();
+      post.setId(COUNT.get());
+      list.put(COUNT.get(), post);
     }
     else {
       list.put(post.getId(), post);

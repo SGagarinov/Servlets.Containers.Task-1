@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
+  private static String path = null;
+  private static String method = null;
+  private static Long param = null;
 
   @Override
   public void init() {
@@ -20,22 +23,21 @@ public class MainServlet extends HttpServlet {
 
   @Override
   protected void service(HttpServletRequest req, HttpServletResponse resp) {
-
     try {
-      final var path = req.getRequestURI();
-      final var method = req.getMethod();
-      Long l = null;
+      path = req.getRequestURI();
+      method = req.getMethod();
+
       try {
         int idx = path.lastIndexOf("/") + 1;
         String value = path.substring((idx));
-        l = Long.parseLong(value);
+        param = Long.parseLong(value);
       }
       catch (Exception ex) { }
 
       if (method.equals("GET") && (path.equals("/api/posts") || path.matches("/api/posts/\\d+"))) {
-        if (l == null)
+        if (param == null)
           controller.all(resp);
-        else  controller.getById(l, resp);
+        else  controller.getById(param, resp);
         return;
       }
 
@@ -44,7 +46,7 @@ public class MainServlet extends HttpServlet {
         return;
       }
       if (method.equals("DELETE") && path.matches("/api/posts/\\d+")) {
-        controller.removeById(l, resp);
+        controller.removeById(param, resp);
         return;
       }
       resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
