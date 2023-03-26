@@ -1,44 +1,38 @@
 package ru.netology.controller;
 
-import com.google.gson.Gson;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import ru.netology.model.Post;
 import ru.netology.service.PostService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Reader;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Controller
+@RestController
+@RequestMapping("/api/posts")
 public class PostController {
-  public static final String APPLICATION_JSON = "application/json";
   private final PostService service;
-  final Gson gson = new Gson();
 
   public PostController(PostService service) {
     this.service = service;
   }
 
-  public void all(HttpServletResponse response) throws IOException {
-    response.setContentType(APPLICATION_JSON);
-    final var data = service.all();
-    response.getWriter().print(gson.toJson(data));
+  @GetMapping
+  public ConcurrentHashMap<Long, Post> all() {
+    return service.all();
   }
 
-  public void getById(long id, HttpServletResponse response) throws IOException {
-    final var data = service.getById(id);
-    response.getWriter().println(gson.toJson(data));
+  @GetMapping("/{id}")
+  public Post getById(@PathVariable long id) {
+    return service.getById(id);
   }
 
-  public void save(Reader body, HttpServletResponse response) throws IOException {
-    response.setContentType(APPLICATION_JSON);
-    final var post = gson.fromJson(body, Post.class);
-    final var data = service.save(post);
-    response.getWriter().print(gson.toJson(data));
+  @PostMapping
+  public Post save(@RequestBody Post post) {
+    return service.save(post);
   }
 
-  public void removeById(long id, HttpServletResponse response) throws IOException {
-    final var data = service.removeById(id);
-    response.getWriter().println(gson.toJson(data));
+  @DeleteMapping("/{id}")
+  public void removeById(long id) {
+    service.removeById(id);
   }
 }
