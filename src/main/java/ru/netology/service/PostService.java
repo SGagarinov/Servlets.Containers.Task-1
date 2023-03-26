@@ -1,13 +1,10 @@
 package ru.netology.service;
 
 import org.springframework.stereotype.Service;
-import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class PostService {
@@ -17,7 +14,7 @@ public class PostService {
     this.repository = repository;
   }
 
-  public ConcurrentHashMap<Long, Post> all() {
+  public ConcurrentMap<Long, Post> all() {
     return repository.all();
   }
 
@@ -36,6 +33,10 @@ public class PostService {
       return deletedId;
     }
     return -1L;
+  }
+
+  public Post returnById(long id) {
+    return repository.returnById(id);
   }
 }
 

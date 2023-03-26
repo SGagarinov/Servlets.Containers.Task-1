@@ -4,12 +4,20 @@ public class Post {
   private long id;
   private String content;
 
+  private Boolean isDeleted = false;
+
   public Post() {
   }
 
   public Post(long id, String content) {
     this.id = id;
     this.content = content;
+  }
+
+  public Post(long id, String content, Boolean isDeleted) {
+    this.id = id;
+    this.content = content;
+    this.isDeleted = isDeleted;
   }
 
   public long getId() {
@@ -26,5 +34,13 @@ public class Post {
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public Boolean getDeleted() {
+    return isDeleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    isDeleted = deleted;
   }
 }
